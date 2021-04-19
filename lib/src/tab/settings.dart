@@ -1,3 +1,4 @@
+import 'package:audioplayer/audioplayer.dart';
 import 'package:flutter/material.dart';
 
 class Setting extends StatefulWidget {
@@ -6,8 +7,25 @@ class Setting extends StatefulWidget {
 }
 
 class _SettingState extends State<Setting> {
-  String valueChoose = "Tiếng Việt";
-  List listItem = ['Tiếng Việt', 'English'];
+  AudioPlayer audioPlugin = AudioPlayer();
+  TextEditingController nameController = TextEditingController();
+  int _radioValue = 0;
+  void _handleRadioValueChange(int value) {
+    setState(() {
+      _radioValue = value;
+
+      switch (_radioValue) {
+        case 0:
+          audioPlugin.stop();
+          break;
+        case 1:
+          audioPlugin.play('https://luan.xyz/files/audio/nasa_on_a_mission.mp3',isLocal: false);
+          break;
+        case 2:
+          break;
+      }
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,34 +38,35 @@ class _SettingState extends State<Setting> {
                   height: 0,
                 ),
                 Text(
-                  "Ngôn Ngữ",
+                  "Nhạc Nền",
                   style: TextStyle(fontSize: 22, color: Color(0xff333333)),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: Container(
-                    padding: EdgeInsets.only(left: 16, right: 16),
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey, width: 1),
-                        borderRadius: BorderRadius.circular(9)),
-                    child: DropdownButton(
-                        icon: Icon(Icons.arrow_drop_down),
-                        iconSize: 36,
-                        isExpanded: true,
-                        underline: SizedBox(),
-                        style: TextStyle(fontSize: 22, color: Colors.black),
-                        value: valueChoose,
-                        onChanged: (newValue) {
-                          setState(() {
-                            valueChoose = newValue;
-                          });
-                        },
-                        items: listItem.map((newValue) {
-                          return DropdownMenuItem(
-                            value: newValue,
-                            child: Text(newValue),
-                          );
-                        }).toList()),
+                  child: new Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      new Radio(
+                        value: 0,
+                        groupValue: _radioValue,
+                        onChanged: _handleRadioValueChange,
+                      ),
+                      new Text(
+                        'Tắt Nhạc',
+                        style: new TextStyle(fontSize: 16.0),
+                      ),
+                      new Radio(
+                        value: 1,
+                        groupValue: _radioValue,
+                        onChanged: _handleRadioValueChange,
+                      ),
+                      new Text(
+                        'Bật Nhạc',
+                        style: new TextStyle(
+                          fontSize: 16.0,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
 

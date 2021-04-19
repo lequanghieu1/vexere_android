@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_app/src/tab/myticket.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:http/http.dart' as http;
 
@@ -25,9 +26,9 @@ class _SearchState extends State<Search> {
     }
   }
 
-  String valueChoose;
+  String from;
   List listItem = ['Bình Dương', 'TPHCM'];
-  String valueGo;
+  String to;
   List details = [];
   List listGo = ['Miền Tây', 'Thanh Hóa'];
   void _onLoginClick() async {
@@ -36,9 +37,9 @@ class _SearchState extends State<Search> {
         date.toString().substring(5, 7) +
         '-' +
         date.toString().substring(0, 4);
-    var url = Uri.parse('http://192.168.1.8:4040/event-code/find');
+    var url = Uri.parse('http://192.168.4.105:4040/event-code/find');
     var response = await http.post(url,
-        body: {'from': valueChoose, 'to': valueGo, 'date': date.toString()});
+        body: {'from': from, 'to': to, 'date': date.toString()});
     if (response.statusCode == 200 && response.body != []) {
       setState(() {
         details = jsonDecode(response.body.toString()) as List;
@@ -47,6 +48,7 @@ class _SearchState extends State<Search> {
       showAlertDialog(context);
     }
   }
+
 
   showAlertDialog(BuildContext context) {
     // set up the button
@@ -113,10 +115,10 @@ class _SearchState extends State<Search> {
                           isExpanded: true,
                           underline: SizedBox(),
                           style: TextStyle(fontSize: 22, color: Colors.black),
-                          value: valueChoose,
+                          value: from,
                           onChanged: (newValue) {
                             setState(() {
-                              valueChoose = newValue;
+                              from = newValue;
                             });
                           },
                           items: listItem.map((newValue) {
@@ -141,10 +143,10 @@ class _SearchState extends State<Search> {
                           isExpanded: true,
                           underline: SizedBox(),
                           style: TextStyle(fontSize: 22, color: Colors.black),
-                          value: valueGo,
+                          value: to,
                           onChanged: (newValue) {
                             setState(() {
-                              valueGo = newValue;
+                              to = newValue;
                             });
                           },
                           items: listGo.map((newValue) {
@@ -158,7 +160,7 @@ class _SearchState extends State<Search> {
                   Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                  padding: EdgeInsets.only(left: 16, right: 16),
                         child: SizedBox(
                           width: double.infinity,
                           height: 52,
@@ -168,26 +170,26 @@ class _SearchState extends State<Search> {
                               selectTimePicker(context);
                             },
                             child: Text(
-                              "Chọn Ngày Khởi Hành",
+                              date.toString().substring(8, 10) +
+                                  '-' +
+                                  date.toString().substring(5, 7) +
+                                  '-' +
+                                  date.toString().substring(0, 4),
                               style:
-                                  TextStyle(color: Colors.white, fontSize: 18),
+                                  TextStyle(color: Colors.black, fontSize: 18),
                             ),
-                            color: Color(0xff3277D8),
+                            color: Colors.white38,
                             shape: RoundedRectangleBorder(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(6))),
                           ),
                         ),
                       ),
-                      Text(date.toString().substring(8, 10) +
-                          '-' +
-                          date.toString().substring(5, 7) +
-                          '-' +
-                          date.toString().substring(0, 4))
+                      // Text()
                     ],
                   ),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 20, 0, 30),
+                    padding: EdgeInsets.only(left: 16, right: 16,top:10),
                     child: SizedBox(
                       width: double.infinity,
                       height: 52,
@@ -304,7 +306,9 @@ class _SearchState extends State<Search> {
                             )),
                         Expanded(
                           child: RaisedButton(
-                            onPressed: _onLoginClick,
+                            onPressed: ()=>{
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => Ticket(to,from,date.toString(),element['price']))),
+                            },
                             child: Image.asset("giohang.png"),
                             color: Colors.white,
                             shape: RoundedRectangleBorder(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/src/tab/bus.dart';
-import 'package:flutter_app/src/tab/myticket.dart';
+import 'package:flutter_app/src/tab/maiticket.dart';
 import 'package:flutter_app/src/tab/profile.dart';
 import 'package:flutter_app/src/tab/search.dart';
 
@@ -13,7 +13,7 @@ class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
   final List<Widget> screens = [
     Search(),
-    Ticket(),
+    MyTicket(),
     Bus(),
     Profile(),
   ];
@@ -68,7 +68,7 @@ class _HomePageState extends State<HomePage> {
                         minWidth: 40,
                         onPressed: () {
                           setState(() {
-                            currentScreen = Ticket();
+                            currentScreen = MyTicket();
                             _currentIndex = 1;
                           });
                         },

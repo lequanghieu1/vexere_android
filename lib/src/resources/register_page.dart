@@ -72,6 +72,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   stream: authBloc.phoneStream,
                   builder: (context, snapshot) => TextField(
                         controller: _phoneController,
+                        keyboardType: TextInputType.number,
                         style: TextStyle(fontSize: 18, color: Colors.black),
                         decoration: InputDecoration(
                             labelText: "Số Điện Thoại",
@@ -91,6 +92,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     stream: authBloc.emailStream,
                     builder: (context, snapshot) => TextField(
                           controller: _emailController,
+                          keyboardType: TextInputType.emailAddress,
                           style: TextStyle(fontSize: 18, color: Colors.black),
                           decoration: InputDecoration(
                               labelText: "Email",
@@ -173,22 +175,24 @@ class _RegisterPageState extends State<RegisterPage> {
     var isValid = authBloc.isValid(_nameController.text, _emailController.text,
         _passController.text, _phoneController.text);
     if (isValid) {
-        var url = Uri.parse('http://192.168.4.105:4040/register');
-        var response = await http
-            .post(url, body: {'user_name': _emailController.text, 'password': _passController.text,"full_name": _nameController.text});
-        print(response.statusCode);
-        if (response.statusCode == 200) {
-          showAlertDialog(context,'Thành công');
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => LoginPage()));
-        } else {
-          showAlertDialog(context,'Thất bại');
-          print(response.statusCode);
-        }
+      var url = Uri.parse('http://192.168.4.105:4040/register');
+      var response = await http.post(url, body: {
+        'user_name': _emailController.text,
+        'password': _passController.text,
+        "full_name": _nameController.text
+      });
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        showAlertDialog(context, 'Thành công');
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => LoginPage()));
+      } else {
+        showAlertDialog(context, 'Thất bại');
+      }
     }
   }
 
-  showAlertDialog(BuildContext context,x) {
+  showAlertDialog(BuildContext context, x) {
     // set up the button
     Widget okButton = FlatButton(
       child: Text("OK"),

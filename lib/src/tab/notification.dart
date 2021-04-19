@@ -13,7 +13,7 @@ class _NotiState extends State<Noti> {
   @override
   void initState() {
     super.initState();
-    dummyList = List.generate(10, (index) => "Item: ${index + 1}");
+    dummyList = List.generate(10, (index) => "Thông Báo ${index + 1}: Đặt Thành Công Vé 609945fg89vfd97${index+1} ");
     _sC.addListener(() {
       if (_sC.position.pixels == _sC.position.maxScrollExtent) {
         _getMore();
@@ -32,7 +32,7 @@ class _NotiState extends State<Noti> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Notifictions")),
+      appBar: AppBar(title: Text("Notifications")),
       body: ListView.builder(
           controller: _sC,
           itemExtent: 80,

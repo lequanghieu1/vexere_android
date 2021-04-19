@@ -5,11 +5,15 @@ class AuthBloc {
   StreamController _emailController = new StreamController();
   StreamController _passController = new StreamController();
   StreamController _phoneController = new StreamController();
+  StreamController _buyController = new StreamController();
+  StreamController _addressController = new StreamController();
 
   Stream get nameStream => _nameController.stream;
   Stream get emailStream => _emailController.stream;
   Stream get passStream => _passController.stream;
   Stream get phoneStream => _phoneController.stream;
+  Stream get buyStream => _buyController.stream;
+  Stream get addressStream => _addressController.stream;
 
   bool Forget(String email) {
     if (email == null || email.length == 0) {
@@ -83,5 +87,7 @@ class AuthBloc {
     _emailController.close();
     _passController.close();
     _phoneController.close();
+    _buyController.close();
+    _addressController.close();
   }
 }

@@ -31,6 +31,10 @@ class _GridDetailsState extends State<GridDetails> {
           RaisedButton(
               child: Text('Quay Lại',style: TextStyle(color: Colors.white)),
               color: Colors.blue.shade200,
+              onPressed: () => Navigator.of(context).pop()),
+          RaisedButton(
+              child: Text('Hủy vé',style: TextStyle(color: Colors.white)),
+              color: Colors.blue.shade200,
               onPressed: () => Navigator.of(context).pop())
         ],
       ),

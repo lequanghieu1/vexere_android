@@ -19,6 +19,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Container(
         padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
         constraints: BoxConstraints.expand(),
@@ -150,7 +151,7 @@ class _LoginPageState extends State<LoginPage> {
   void _onLoginClick() async {
     var Login = authBloc.Login(_emailController.text, _passController.text);
     if (Login) {
-      var url = Uri.parse('http://192.168.1.8:4040/login');
+      var url = Uri.parse('http://192.168.4.105:4040/login');
       var response = await http.post(url, body: {
         'user_name': _emailController.text,
         'password': _passController.text
