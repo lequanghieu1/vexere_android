@@ -67,7 +67,7 @@ class _MyTicketState extends State<MyTicket> {
           text = text.toLowerCase();
           setState(() {
             _ticketDisplay = _ticket.where((ticket) {
-              var idTic = ticket.sId.toLowerCase();
+              var idTic = ticket.maVeXe.toLowerCase();
               return idTic.contains(text);
             }).toList();
           });
@@ -84,37 +84,37 @@ class _MyTicketState extends State<MyTicket> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              _ticketDisplay[index].sId,
+              _ticketDisplay[index].maVeXe,
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
             Text(
-              "Điểm đi : " + _ticketDisplay[index].from,
+              "Điểm đi : " + _ticketDisplay[index].soGhe,
               style: TextStyle(color: Colors.grey),
             ),
             Text(
-              "Điểm đến : " + _ticketDisplay[index].to,
+              "Điểm đến : " + _ticketDisplay[index].email,
               style: TextStyle(color: Colors.grey),
             ),
             Text(
-              "Ngày đi : " + _ticketDisplay[index].date,
+              "Ngày đi : " + _ticketDisplay[index].ngayDat,
               style: TextStyle(color: Colors.grey),
             ),
             Text(
-              "Giá Vé : " + _ticketDisplay[index].price,
+              "Giá Vé : " + _ticketDisplay[index].ngayDi,
               style: TextStyle(color: Colors.grey),
             ),
             Text(
-              "Số Ghế : " + _ticketDisplay[index].position,
+              "Số Ghế : " + _ticketDisplay[index].gioDi,
               style: TextStyle(color: Colors.grey),
             ),
             Text(
-              "Chủ Vé : " + _ticketDisplay[index].name,
+              "Chủ Vé : " + _ticketDisplay[index].bienSoXe,
               style: TextStyle(color: Colors.grey),
             ),
             RaisedButton(
               onPressed: () => {
                 if (int.parse(date.toString().substring(8, 10)) -
-                        int.parse(_ticketDisplay[index].date.substring(0, 2)) >
+                        int.parse(_ticketDisplay[index].ngayDi.substring(8, 10)) >
                     0)
                   {
                     if (doing == false)
@@ -122,14 +122,14 @@ class _MyTicketState extends State<MyTicket> {
                         _showMyDialog('Đánh Giá Chuyến Đi'),
                       }
                   }
-                else if (int.parse(_ticketDisplay[index].date.substring(0, 2)) -
+                else if (int.parse(_ticketDisplay[index].ngayDi.substring(8, 10)) -
                         int.parse(date.toString().substring(8, 10)) >
                     0)
                   {
                     _showMyDialog('Hủy Vé'),
                   }
               },
-              child: int.parse(_ticketDisplay[index].date.substring(0, 2)) -
+              child: int.parse(_ticketDisplay[index].ngayDi.substring(8, 10)) -
                           int.parse(date.toString().substring(8, 10)) >
                       0
                   ? Text(
@@ -138,7 +138,7 @@ class _MyTicketState extends State<MyTicket> {
                     )
                   : int.parse(date.toString().substring(8, 10)) -
                               int.parse(
-                                  _ticketDisplay[index].date.substring(0, 2)) >
+                                  _ticketDisplay[index].ngayDi.substring(8, 10)) >
                           0
                       ? doing == false
                           ? Text(
@@ -155,13 +155,13 @@ class _MyTicketState extends State<MyTicket> {
                           "Chuyến đang đi",
                           style: TextStyle(color: Colors.white, fontSize: 18),
                         ),
-              color: int.parse(_ticketDisplay[index].date.substring(0, 2)) -
-                          int.parse(date.toString().substring(8, 10)) >
-                      0
+              color: int.parse(_ticketDisplay[index].ngayDi.substring(8, 10)) -
+                        int.parse(date.toString().substring(8, 10)) >
+                    0
                   ? Colors.red
                   : int.parse(date.toString().substring(8, 10)) -
                               int.parse(
-                                  _ticketDisplay[index].date.substring(0, 2)) >
+                                  _ticketDisplay[index].ngayDi.substring(8, 10)) >
                           0
                       ? doing == false
                           ? Colors.blue

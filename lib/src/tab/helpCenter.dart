@@ -7,6 +7,7 @@ class HelpCenter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Column(
         children: [
           Padding(
@@ -57,7 +58,7 @@ class HelpCenter extends StatelessWidget {
                         fontSize: 20.0),
                   ),
                   Text(
-                    'Phone : 0333157628',
+                    'Phone : 0338168817',
                     style: TextStyle(
                       fontSize: 18.0,
                       fontStyle: FontStyle.italic,
@@ -71,7 +72,7 @@ class HelpCenter extends StatelessWidget {
                       Text(
                         'Mẹo : ',
                         style: TextStyle(
-                          fontSize: 10.0,
+                          fontSize: 16.0,
                           fontStyle: FontStyle.italic,
                           fontWeight: FontWeight.w300,
                           color: Colors.red,
@@ -83,7 +84,7 @@ class HelpCenter extends StatelessWidget {
                         style: TextStyle(
                             color: Colors.black,
                             fontStyle: FontStyle.normal,
-                            fontSize: 10.0),
+                            fontSize: 15.0),
                       ),
                     ],
                   ),

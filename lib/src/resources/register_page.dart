@@ -1,8 +1,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/network/getAPI.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter_app/src/blocs/auth_bloc.dart';
 import 'package:flutter_app/src/resources/login_page.dart';
-import 'package:http/http.dart' as http;
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -71,15 +72,14 @@ class _RegisterPageState extends State<RegisterPage> {
               StreamBuilder(
                   stream: authBloc.phoneStream,
                   builder: (context, snapshot) => TextField(
-                        controller: _phoneController,
-                        keyboardType: TextInputType.number,
+                        controller: _emailController,
                         style: TextStyle(fontSize: 18, color: Colors.black),
                         decoration: InputDecoration(
-                            labelText: "Số Điện Thoại",
+                            labelText: "Email",
                             errorText:
                                 snapshot.hasError ? snapshot.error : null,
                             prefixIcon: Container(
-                                width: 50, child: Image.asset("ic_phone.png")),
+                                width: 50, child: Image.asset("ic_mail.png")),
                             border: OutlineInputBorder(
                                 borderSide: BorderSide(
                                     color: Color(0xffCED0D2), width: 1),
@@ -91,15 +91,15 @@ class _RegisterPageState extends State<RegisterPage> {
                 child: StreamBuilder(
                     stream: authBloc.emailStream,
                     builder: (context, snapshot) => TextField(
-                          controller: _emailController,
-                          keyboardType: TextInputType.emailAddress,
+                          controller: _passController,
+                          obscureText: true,
                           style: TextStyle(fontSize: 18, color: Colors.black),
                           decoration: InputDecoration(
-                              labelText: "Email",
+                              labelText: "Mật Khẩu",
                               errorText:
                                   snapshot.hasError ? snapshot.error : null,
                               prefixIcon: Container(
-                                  width: 50, child: Image.asset("ic_mail.png")),
+                                  width: 50, child: Image.asset("ic_lock.png")),
                               border: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       color: Color(0xffCED0D2), width: 1),
@@ -110,13 +110,13 @@ class _RegisterPageState extends State<RegisterPage> {
               StreamBuilder(
                   stream: authBloc.passStream,
                   builder: (context, snapshot) => TextField(
-                        controller: _passController,
+                        controller: _phoneController,
                         obscureText: true,
                         style: TextStyle(fontSize: 18, color: Colors.black),
                         decoration: InputDecoration(
                             errorText:
                                 snapshot.hasError ? snapshot.error : null,
-                            labelText: "Mật Khẩu",
+                            labelText: "Nhập Lại Mật Khẩu",
                             prefixIcon: Container(
                                 width: 50, child: Image.asset("ic_lock.png")),
                             border: OutlineInputBorder(
@@ -172,55 +172,56 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   _onSignUpClicked() async {
+    String hot = handlehot();
     var isValid = authBloc.isValid(_nameController.text, _emailController.text,
         _passController.text, _phoneController.text);
+
     if (isValid) {
-      var url = Uri.parse('http://192.168.4.105:4040/register');
-      var response = await http.post(url, body: {
-        'user_name': _emailController.text,
-        'password': _passController.text,
-        "full_name": _nameController.text
-      });
-      print(response.statusCode);
-      if (response.statusCode == 200) {
-        showAlertDialog(context, 'Thành công');
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => LoginPage()));
-      } else {
-        showAlertDialog(context, 'Thất bại');
-      }
+        var url = Uri.parse('$hot/m/register');
+  var response = await http.post(url, body: {
+"name": _nameController.text,
+      "password": _passController.text,
+      "password2": _phoneController.text,
+      'email': _emailController.text
+  });
+
+  if (response.statusCode == 200) {
+    showAlertDialog(context, 'Thành công');
+  } else {
+    showAlertDialog(context, 'Thất bại');
+  }
     }
   }
-
   showAlertDialog(BuildContext context, x) {
-    // set up the button
-    Widget okButton = FlatButton(
-      child: Text("OK"),
-      onPressed: () {},
-    );
+  // set up the button
+  Widget okButton = FlatButton(
+    child: Text("OK"),
+    onPressed: () {},
+  );
 
-    // set up the AlertDialog
-    AlertDialog alert = AlertDialog(
-      title: Text("Thông báo"),
-      content: Text("Đăng ký tài khoản ${x}"),
-      actions: [
-        FlatButton(
-          child: Text("Đóng lại"),
-          onPressed: () {
-            Navigator.of(context).pop();
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => LoginPage()));
-          },
-        )
-      ],
-    );
+  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    title: Text("Thông báo"),
+    content: Text("Đăng ký tài khoản ${x}"),
+    actions: [
+      FlatButton(
+        child: Text("Đóng lại"),
+        onPressed: () {
+          Navigator.of(context).pop();
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => LoginPage()));
+        },
+      )
+    ],
+  );
 
-    // show the dialog
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
-  }
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
+}
+
 }

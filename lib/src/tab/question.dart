@@ -31,7 +31,7 @@ class ProfileApp extends StatelessWidget {
                         height: 10.0,
                       ),
                       Text(
-                        "Kanon",
+                        "Nguyễn Văn Hải",
                         style: TextStyle(
                           fontSize: 22.0,
                           color: Colors.white,
@@ -150,7 +150,7 @@ class ProfileApp extends StatelessWidget {
                     height: 10.0,
                   ),
                   Text(
-                    'Email : lequanghieubd@gmail.com\n'
+                    'Email : shinminah357159@gmail.com\n'
                     'Phone : 0333157628',
                     style: TextStyle(
                       fontSize: 18.0,

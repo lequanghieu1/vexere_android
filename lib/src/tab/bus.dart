@@ -76,6 +76,7 @@ class _BusState extends State<Bus> {
             child: Container(
               padding: EdgeInsets.all(10),
               child: Row(
+
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [

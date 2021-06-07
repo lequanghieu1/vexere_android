@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_app/network/getAPI.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_app/model/photo.dart';
 
@@ -10,8 +11,10 @@ class NetworkRequest {
     return photos;
   }
 
-  static Future<List<Photo>> fetchPhotos() async {
-    var url = Uri.parse('http://192.168.4.105:4040/model-device');
+  static Future<List<Photo>> fetchPhotos(time,date,MaCX) async {
+    String hot = handlehot();
+    var url = Uri.parse('$hot/m/posts?tripid=$MaCX&date=$date&time=$time');
+    print(url);
     var response = await http.get(url);
     if (response.statusCode == 200) {
       return compute(parsePhotos, response.body);

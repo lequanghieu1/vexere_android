@@ -13,11 +13,12 @@ class Ticket extends StatefulWidget {
   final String from;
   final String date;
   final String price;
+  final String MaCX;
 
-  const Ticket(this.to, this.from, this.date, this.price);
+  const Ticket(this.to, this.from, this.date, this.price, this.MaCX);
   @override
   _TicketState createState() =>
-      _TicketState(this.to, this.from, this.date, this.price);
+      _TicketState(this.to, this.from, this.date, this.price,this.MaCX);
 }
 
 class _TicketState extends State<Ticket> {
@@ -26,8 +27,9 @@ class _TicketState extends State<Ticket> {
   final String from;
   final String date;
   final String price;
+  final String MaCX;
 
-  _TicketState(this.to, this.from, this.date, this.price);
+  _TicketState(this.to, this.from, this.date, this.price, this.MaCX);
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -36,7 +38,7 @@ class _TicketState extends State<Ticket> {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: Home(to, from, date, price),
+      home: Home(to, from, date, price,MaCX),
       debugShowCheckedModeBanner: false,
     );
   }
@@ -48,10 +50,11 @@ class Home extends StatefulWidget {
   final String from;
   final String date;
   final String price;
+  final String MaCX;
 
-  const Home(this.to, this.from, this.date, this.price);
+  const Home(this.to, this.from, this.date, this.price, this.MaCX);
   @override
-  _HomeState createState() => _HomeState(to, from, date, price);
+  _HomeState createState() => _HomeState(to, from, date, price,MaCX);
 }
 
 class _HomeState extends State<Home> {
@@ -60,10 +63,11 @@ class _HomeState extends State<Home> {
   final String from;
   final String date;
   final String price;
+  final String MaCX;
   List listTicket = [];
   List listDataFinal = [];
 
-  _HomeState(this.to, this.from, this.date, this.price);
+  _HomeState(this.to, this.from, this.date, this.price, this.MaCX);
   gridview(AsyncSnapshot<List<Photo>> snapshot) {
     return Padding(
         padding: EdgeInsets.all(3),
@@ -75,8 +79,8 @@ class _HomeState extends State<Home> {
           children: snapshot.data.map((photo) {
             return GestureDetector(
               child: GridTile(
-                child:
-                    PhotoCell(photo, listTicket, listDataFinal, to, from, date),
+               child:
+                   PhotoCell(photo, listTicket, listDataFinal, to, from, date),
               ),
               onTap: () {},
             );
@@ -98,7 +102,7 @@ class _HomeState extends State<Home> {
        Navigator.push(
            context,
            MaterialPageRoute(
-               builder: (context) => Pay(to, from, date, price, listTicket)));
+               builder: (context) => Pay(listTicket)));
      }
     }
 
@@ -111,7 +115,7 @@ class _HomeState extends State<Home> {
         children: [
           Flexible(
             child: FutureBuilder<List<Photo>>(
-              future: NetworkRequest.fetchPhotos(),
+              future: NetworkRequest.fetchPhotos(price,date,MaCX),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return Text('Error ${snapshot.error}');

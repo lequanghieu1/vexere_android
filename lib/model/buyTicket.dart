@@ -1,44 +1,48 @@
 class BuyTicket {
-  String sId;
-  String to;
-  String name;
-  String from;
-  String date;
-  String position;
-  String price;
-  int iV;
+  String maVeXe;
+  String maCX;
+  String soGhe;
+  String email;
+  String ngayDat;
+  String maTX;
+  String bienSoXe;
+  String ngayDi;
+  String gioDi;
 
   BuyTicket(
-      {this.sId,
-        this.to,
-        this.name,
-        this.from,
-        this.date,
-        this.position,
-        this.price,
-        this.iV});
+      {this.maVeXe,
+      this.maCX,
+      this.soGhe,
+      this.email,
+      this.ngayDat,
+      this.maTX,
+      this.bienSoXe,
+      this.ngayDi,
+      this.gioDi});
 
   BuyTicket.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-    to = json['to'];
-    name = json['name'];
-    from = json['from'];
-    date = json['date'];
-    position = json['position'];
-    price = json['price'];
-    iV = json['__v'];
+    maVeXe = json['MaVeXe'];
+    maCX = json['MaCX'];
+    soGhe = json['SoGhe'];
+    email = json['Email'];
+    ngayDat = json['NgayDat'];
+    maTX = json['MaTX'];
+    bienSoXe = json['BienSoXe'];
+    ngayDi = json['NgayDi'];
+    gioDi = json['GioDi'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_id'] = this.sId;
-    data['to'] = this.to;
-    data['name'] = this.name;
-    data['from'] = this.from;
-    data['date'] = this.date;
-    data['position'] = this.position;
-    data['price'] = this.price;
-    data['__v'] = this.iV;
+    data['MaVeXe'] = this.maVeXe;
+    data['MaCX'] = this.maCX;
+    data['SoGhe'] = this.soGhe;
+    data['Email'] = this.email;
+    data['NgayDat'] = this.ngayDat;
+    data['MaTX'] = this.maTX;
+    data['BienSoXe'] = this.bienSoXe;
+    data['NgayDi'] = this.ngayDi;
+    data['GioDi'] = this.gioDi;
     return data;
   }
 }

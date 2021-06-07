@@ -35,13 +35,14 @@ class _PhotoCellState extends State<PhotoCell> {
   Widget build(BuildContext context) {
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      color: photo.choose == '0'
+      color: 
+         photo.choose == '0'
           ? color == 'white'
               ? Colors.white
               : Colors.red
           : photo.choose == '2'
               ? Colors.grey
-              : Colors.yellowAccent,
+              : Colors.grey,
       child: Padding(
         padding: EdgeInsets.all(10),
         child: Container(
@@ -55,7 +56,7 @@ class _PhotoCellState extends State<PhotoCell> {
                   child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
                 child: Hero(
-                  tag: "Photo${photo.sId}",
+                  tag: "Photo${photo.choose}",
                   child: photo.choose == '0'
                       ? RaisedButton(
                           onPressed: listTicket.length <= 3
@@ -66,7 +67,7 @@ class _PhotoCellState extends State<PhotoCell> {
                                         setState(() {
                                           color = 'red';
                                           choose = true;
-                                          listTicket.add(photo.name);
+                                          listTicket.add(photo.code);
                                         }),
                                       }
                                     else if (choose == true)
@@ -74,7 +75,7 @@ class _PhotoCellState extends State<PhotoCell> {
                                         setState(() {
                                           color = 'white';
                                           choose = false;
-                                          listTicket.remove(photo.name);
+                                          listTicket.remove(photo.code);
                                         }),
                                       },
                                     print(listTicket),
@@ -91,7 +92,7 @@ class _PhotoCellState extends State<PhotoCell> {
                         )
                       : FadeInImage.assetNetwork(
                           placeholder: 'no_image.png',
-                          image: photo.url,
+                          image: 'https://www.vhv.rs/dpng/d/418-4187632_your-home-is-under-contract-sold-out-icon.png',
                           width: 100,
                           height: 100),
                 ),
@@ -99,7 +100,7 @@ class _PhotoCellState extends State<PhotoCell> {
               Padding(
                 padding: EdgeInsets.all(10),
                 child: Text(
-                  photo.name,
+                  photo.code,
                   maxLines: 1,
                   softWrap: true,
                   textAlign: TextAlign.center,

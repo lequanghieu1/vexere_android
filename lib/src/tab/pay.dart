@@ -1,29 +1,27 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+
 import 'package:flutter_app/src/resources/overviewPay.dart';
+import 'package:flutter_app/src/blocs/share.dart';
 import 'package:grouped_list/grouped_list.dart';
 
 class Pay extends StatefulWidget {
   @required
-  final String to;
-  final String from;
-  final String date;
-  final String price;
-  final List name;
+  final List chair;
 
-  const Pay(this.to, this.from, this.date, this.price, this.name);
+  const Pay( this.chair);
   @override
-  _PayState createState() => _PayState(to, from, date, price, name);
+  _PayState createState() => _PayState(chair);
 }
 
 class _PayState extends State<Pay> {
   @required
-  final String to;
-  final String from;
-  final String date;
-  final String price;
-  final List name;
+  final List chair;
 
-  _PayState(this.to, this.from, this.date, this.price, this.name);
+  _PayState( this.chair);
+  String info;
+  SharedPref shares = new SharedPref();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +35,7 @@ class _PayState extends State<Pay> {
         ],
       ),
       body: GroupedListView<dynamic, String>(
-        elements: name,
+        elements: chair,
         groupBy: (element) => element,
         groupSeparatorBuilder: (String groupByValue) => Padding(
           padding: EdgeInsets.all(10),
@@ -57,8 +55,15 @@ class _PayState extends State<Pay> {
                 ],
               )),
               RaisedButton(
-                onPressed: () => Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => EditInfo('kanon',' Lã Xuân Oai,Q9,TPHCM','0123456789'))),
+                onPressed: () async => {
+                  //  info = await jsonDecode(shares.read('jwt')),
+                  // print(info),
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => EditInfo(
+                              'kanon', ' Lã Xuân Oai,Q9,TPHCM', '0123456789',chair)))
+                },
                 child: Icon(Icons.edit),
                 color: Colors.yellowAccent,
                 shape: RoundedRectangleBorder(
@@ -93,7 +98,7 @@ class _PayState extends State<Pay> {
                             Padding(
                               padding: EdgeInsets.only(left: 10, right: 10),
                               child: Text(
-                                to + ' ==> ' + from,
+                                'frgr' + ' ==> ' + 'trg',
                                 style: TextStyle(
                                     fontSize: 16, fontWeight: FontWeight.bold),
                                 maxLines: 2,
@@ -126,7 +131,7 @@ class _PayState extends State<Pay> {
                                       color: Colors.grey, size: 16),
                                   Container(
                                     margin: EdgeInsets.only(left: 10),
-                                    child: Text(date.substring(0, 19)),
+                                    child: Text('22-10-2020'),
                                   )
                                 ],
                               ),
@@ -141,7 +146,7 @@ class _PayState extends State<Pay> {
                                       color: Colors.grey, size: 16),
                                   Container(
                                     margin: EdgeInsets.only(left: 10),
-                                    child: Text(price),
+                                    child: Text('10000'),
                                   )
                                 ],
                               ),

@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_app/model/trip.dart';
+import 'package:flutter_app/network/getAPI.dart';
 import 'package:flutter_app/src/tab/myticket.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:http/http.dart' as http;
@@ -11,7 +13,35 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
+  String MaTX;
+  List<TuyenXe> trips = [];
+  @override
+  void initState() {
+    _handleGetTrip();
+    super.initState();
+  }
+
+  _handleGetTrip() async {
+    datedata = date.toString().substring(0, 4) +
+        '-' +
+        date.toString().substring(5, 7) +
+        '-' +
+        date.toString().substring(8, 10);
+    String hot = handlehot();
+    var response = await http.get('$hot/trips');
+    List noti = jsonDecode(response.body) as List;
+    noti.forEach((element) {
+      trips.add(TuyenXe.fromJson(element));
+    });
+    trips.forEach((element) {
+      if (element.diemDi == from && element.diemDen == to) {
+        MaTX = element.maTX;
+      }
+    });
+  }
+
   DateTime date = DateTime.now();
+  String datedata = '';
   Future<Null> selectTimePicker(BuildContext context) async {
     final DateTime picked = await showDatePicker(
         context: context,
@@ -21,36 +51,43 @@ class _SearchState extends State<Search> {
     if (picked != null && picked != date) {
       setState(() {
         date = picked;
-        print(date.toString());
       });
     }
   }
 
-  String from;
-  List listItem = ['Bình Dương', 'TPHCM'];
-  String to;
+  String from = 'TPHCM';
+  List listItem = ['KienGiang', 'TienGiang', 'TPHCM'];
+  String to = 'KienGiang';
   List details = [];
-  List listGo = ['Miền Tây', 'Thanh Hóa'];
+  List listGo = ['KienGiang', "TienGiang", 'TPHCM'];
   void _onLoginClick() async {
+    print(MaTX);
+    _handleGetTrip();
+    String hot = handlehot();
+    if (to == from) {
+      return showAlertDialog(context, 'Điểm đi và điểm đến không được trùng!');
+    }
     String datemonth = date.toString().substring(8, 10) +
         '-' +
         date.toString().substring(5, 7) +
         '-' +
         date.toString().substring(0, 4);
-    var url = Uri.parse('http://192.168.4.105:4040/event-code/find');
-    var response = await http.post(url,
-        body: {'from': from, 'to': to, 'date': date.toString()});
+    var url = Uri.parse('$hot/trip?tripid=$MaTX&date=$datedata');
+    print(url);
+    var response = await http.get(url);
     if (response.statusCode == 200 && response.body != []) {
       setState(() {
         details = jsonDecode(response.body.toString()) as List;
+        if (details.length == 0) {
+          showAlertDialog(context, "Không tồn tại chuyến đi");
+        }
       });
     } else {
-      showAlertDialog(context);
+      showAlertDialog(context, "Không tồn tại chuyến đi");
     }
   }
 
-
-  showAlertDialog(BuildContext context) {
+  showAlertDialog(BuildContext context, text) {
     // set up the button
     Widget okButton = FlatButton(
       child: Text("OK"),
@@ -59,8 +96,8 @@ class _SearchState extends State<Search> {
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Có Lỗi"),
-      content: Text("Không tồn tại chuyến xe bạn muốn tìm"),
+      title: Text("Có lỗi"),
+      content: Text(text),
       actions: [
         FlatButton(
           child: Text("Đóng lại"),
@@ -92,7 +129,7 @@ class _SearchState extends State<Search> {
                   SizedBox(
                     height: 0,
                   ),
-                  Image.asset('xekhach.jpg'),
+                  Image.asset('xekhach.png'),
                   Text(
                     "Chào mừng!",
                     style: TextStyle(fontSize: 22, color: Color(0xff333333)),
@@ -119,6 +156,7 @@ class _SearchState extends State<Search> {
                           onChanged: (newValue) {
                             setState(() {
                               from = newValue;
+                              _handleGetTrip();
                             });
                           },
                           items: listItem.map((newValue) {
@@ -147,6 +185,7 @@ class _SearchState extends State<Search> {
                           onChanged: (newValue) {
                             setState(() {
                               to = newValue;
+                              _handleGetTrip();
                             });
                           },
                           items: listGo.map((newValue) {
@@ -160,7 +199,7 @@ class _SearchState extends State<Search> {
                   Column(
                     children: [
                       Padding(
-                  padding: EdgeInsets.only(left: 16, right: 16),
+                        padding: EdgeInsets.only(left: 16, right: 16),
                         child: SizedBox(
                           width: double.infinity,
                           height: 52,
@@ -170,6 +209,7 @@ class _SearchState extends State<Search> {
                               selectTimePicker(context);
                             },
                             child: Text(
+
                               date.toString().substring(8, 10) +
                                   '-' +
                                   date.toString().substring(5, 7) +
@@ -189,9 +229,9 @@ class _SearchState extends State<Search> {
                     ],
                   ),
                   Padding(
-                    padding: EdgeInsets.only(left: 16, right: 16,top:10),
+                    padding: EdgeInsets.only(left: 16, right: 16, top: 10),
                     child: SizedBox(
-                      width: double.infinity,
+                      width: 100,
                       height: 52,
                       // ignore: deprecated_member_use
                       child: RaisedButton(
@@ -211,7 +251,7 @@ class _SearchState extends State<Search> {
             ))
           : GroupedListView<dynamic, String>(
               elements: details.toList(),
-              groupBy: (element) => element['date'],
+              groupBy: (element) => element['NgayDi'],
               groupSeparatorBuilder: (String groupByValue) => Padding(
                 padding: EdgeInsets.all(10),
                 child: Row(
@@ -259,7 +299,7 @@ class _SearchState extends State<Search> {
                                     padding:
                                         EdgeInsets.only(left: 10, right: 10),
                                     child: Text(
-                                      element['price'],
+                                      element['BienSoXe'],
                                       style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold),
@@ -279,7 +319,7 @@ class _SearchState extends State<Search> {
                                             color: Colors.grey, size: 16),
                                         Container(
                                           margin: EdgeInsets.only(left: 10),
-                                          child: Text('${element['from']}'),
+                                          child: Text('${element['GioDi']}'),
                                         )
                                       ],
                                     ),
@@ -296,7 +336,7 @@ class _SearchState extends State<Search> {
                                             color: Colors.grey, size: 16),
                                         Container(
                                           margin: EdgeInsets.only(left: 10),
-                                          child: Text('${element['to']}'),
+                                          child: Text('${element['NgayDi']}'),
                                         )
                                       ],
                                     ),
@@ -306,8 +346,12 @@ class _SearchState extends State<Search> {
                             )),
                         Expanded(
                           child: RaisedButton(
-                            onPressed: ()=>{
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => Ticket(to,from,date.toString(),element['price']))),
+                            onPressed: () => {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Ticket(to, from,
+                                          datedata.toString(), element['GioDi'],MaTX))),
                             },
                             child: Image.asset("giohang.png"),
                             color: Colors.white,
@@ -322,7 +366,7 @@ class _SearchState extends State<Search> {
                 );
               },
               itemComparator: (item1, item2) =>
-                  item1['from'].compareTo(item2['to']), // optional
+                  item1['NgayDi'].compareTo(item2['GioDi']), // optional
               useStickyGroupSeparators: true, // optional
               floatingHeader: true, // optional
               order: GroupedListOrder.ASC, // optional

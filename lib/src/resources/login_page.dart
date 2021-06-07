@@ -1,9 +1,13 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/gestures.dart';
-import 'package:flutter_app/src/blocs/auth_bloc.dart';
-import 'package:flutter_app/src/resources/forget_pass.dart';
+import 'dart:convert';
+
+import 'package:flutter_app/src/blocs/share.dart';
 import 'package:flutter_app/src/resources/homepage.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter_app/network/getAPI.dart';
+import 'package:flutter_app/src/blocs/auth_bloc.dart';
+import 'package:flutter_app/src/resources/forget_pass.dart';
 import 'package:flutter_app/src/resources/register_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -34,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 40, 0, 6),
                 child: Text(
-                  "Chào mừng!" ,
+                  "Chào mừng!",
                   style: TextStyle(fontSize: 22, color: Color(0xff333333)),
                 ),
               ),
@@ -50,7 +54,7 @@ class _LoginPageState extends State<LoginPage> {
                           controller: _emailController,
                           style: TextStyle(fontSize: 18, color: Colors.black),
                           decoration: InputDecoration(
-                              labelText:  "Tài Khoản" ,
+                              labelText: "Tài Khoản",
                               errorText:
                                   snapshot.hasError ? snapshot.error : null,
                               prefixIcon: Container(
@@ -71,7 +75,7 @@ class _LoginPageState extends State<LoginPage> {
                         decoration: InputDecoration(
                             errorText:
                                 snapshot.hasError ? snapshot.error : null,
-                            labelText:  "Mật Khẩu" ,
+                            labelText: "Mật Khẩu",
                             prefixIcon: Container(
                                 width: 50, child: Image.asset("ic_lock.png")),
                             border: OutlineInputBorder(
@@ -95,7 +99,7 @@ class _LoginPageState extends State<LoginPage> {
                                   MaterialPageRoute(
                                       builder: (context) => ForgetPass()));
                             },
-                          text: "Quên Mật Khẩu" ,
+                          text: "Quên Mật Khẩu",
                           style:
                               TextStyle(color: Color(0xff3277D8), fontSize: 16))
                     ]),
@@ -109,9 +113,9 @@ class _LoginPageState extends State<LoginPage> {
                   height: 52,
                   // ignore: deprecated_member_use
                   child: RaisedButton(
-                    onPressed: _onLoginClick,
+                    onPressed: () => _onLoginClick(context),
                     child: Text(
-                        "Đăng Nhập",
+                      "Đăng Nhập",
                       style: TextStyle(color: Colors.white, fontSize: 18),
                     ),
                     color: Color(0xff3277D8),
@@ -124,7 +128,7 @@ class _LoginPageState extends State<LoginPage> {
                 padding: const EdgeInsets.fromLTRB(0, 0, 0, 40),
                 child: RichText(
                   text: TextSpan(
-                      text:"Chưa có tài khoản",
+                      text: "Chưa có tài khoản",
                       style: TextStyle(color: Color(0xff606470), fontSize: 16),
                       children: <TextSpan>[
                         TextSpan(
@@ -148,50 +152,58 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _onLoginClick() async {
+  void _onLoginClick(BuildContext context) async {
+    String hot = handlehot();
     var Login = authBloc.Login(_emailController.text, _passController.text);
     if (Login) {
-      var url = Uri.parse('http://192.168.4.105:4040/login');
-      var response = await http.post(url, body: {
-        'user_name': _emailController.text,
-        'password': _passController.text
-      });
-      if (response.statusCode == 200) {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => HomePage()));
-      } else {
-        showAlertDialog(context);
-      }
+      var url = Uri.parse('$hot/user/m/login');
+  var response = await http.post(url, body: {
+    'email':_emailController.text,
+    'password':_passController.text
+  });
+  if (response.statusCode == 200) {
+    SharedPref share = new SharedPref();
+    // print(jsonDecode(response.body)['info']['Email']);
+
+    share.save('jwt', jsonDecode(response.body)['jwt']);
+    share.save('user', jsonDecode(response.body)['info']['Email']);
+
+
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => HomePage()));
+  } else {
+    showAlertDialog(context);
+  }
     }
   }
 
-  showAlertDialog(BuildContext context) {
-    // set up the button
-    Widget okButton = FlatButton(
-      child: Text("OK"),
-      onPressed: () {},
-    );
+showAlertDialog(BuildContext context) {
+  // set up the button
+  Widget okButton = FlatButton(
+    child: Text("OK"),
+    onPressed: () {},
+  );
 
-    // set up the AlertDialog
-    AlertDialog alert = AlertDialog(
-      title: Text("Có Lỗi"),
-      content: Text("Sai tên đăng nhập hoặc mật khẩu"),
-      actions: [
-        FlatButton(
-          child: Text("Đóng lại"),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        )
-      ],
-    );
+  // set up the AlertDialog
+  AlertDialog alert = AlertDialog(
+    title: Text("Có Lỗi"),
+    content: Text("Sai tên đăng nhập hoặc mật khẩu"),
+    actions: [
+      FlatButton(
+        child: Text("Đóng lại"),
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+      )
+    ],
+  );
 
-    // show the dialog
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
-  }
+  // show the dialog
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
+}
 }

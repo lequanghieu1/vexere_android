@@ -24,11 +24,12 @@ dependencies:
   flutter:
     sdk: flutter
   http: ^0.12.0+4
+  form_validator: ^0.1.7
+  shared_preferences: ^2.0.5
   image_picker: ^0.6.7+4
   audioplayer: ^0.8.1
   audioplayer_web: 0.7.1
   flutter_svg: ^0.21.0+1
-  shared_preferences: any
   flutter_localizations:
     sdk: flutter
 
@@ -70,7 +71,7 @@ flutter:
      - ic_remove_x.png
      - ic_phone.png
      - ic_user.png
-     - xekhach.jpg
+     - xekhach.png
      - phuongtrang.jpg
      - giohang.png
      - kanon.png

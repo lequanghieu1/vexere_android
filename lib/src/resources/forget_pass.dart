@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/network/getAPI.dart';
 import 'package:flutter_app/src/blocs/auth_bloc.dart';
 import 'package:flutter_app/src/resources/login_page.dart';
 import 'package:http/http.dart' as http;
@@ -70,21 +71,23 @@ class _ForgetPassState extends State<ForgetPass> {
   }
 
   Future<void> _onLoginClick() async {
+    String hot = handlehot();
     var Forget = authBloc.Forget(_emailController.text);
     if (Forget) {
-      var url = Uri.parse('http://192.168.4.105:4040/forgot');
-      var response = await http
-          .post(url, body: {'email': _emailController.text});
+      var url = Uri.parse('$hot/m/forgot');
+      var response =
+          await http.post(url, body: {'email': _emailController.text});
       if (response.statusCode == 200) {
         print(response.body);
-        showAlertDialog(context);
+        showAlertDialog(context,
+            "Reset mật khẩu thành công,Hãy kiểm tra email của bạn", 200);
       } else {
-
+        showAlertDialog(context, "Email không tồn tại,hãy thử lại", 400);
       }
     }
   }
 
-  showAlertDialog(BuildContext context) {
+  showAlertDialog(BuildContext context, data, status) {
     // set up the button
     Widget okButton = FlatButton(
       child: Text("OK"),
@@ -94,15 +97,16 @@ class _ForgetPassState extends State<ForgetPass> {
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
       title: Text("Thông báo"),
-      content: Text("Hãy kiểm tra email của bạn"),
+      content: Text("${data}"),
       actions: [
         FlatButton(
           child: Text("Đóng lại"),
           onPressed: () {
             Navigator.of(context).pop();
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => LoginPage()));
-
+            if (status == 200) {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => LoginPage()));
+            }
           },
         )
       ],

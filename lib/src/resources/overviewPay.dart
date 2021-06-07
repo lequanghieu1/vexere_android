@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_app/network/getAPI.dart';
 import 'package:flutter_app/src/blocs/auth_bloc.dart';
 import 'package:flutter_app/src/resources/homepage.dart';
+import 'package:http/http.dart' as http;
 
 
 class EditInfo extends StatefulWidget {
@@ -8,9 +12,10 @@ class EditInfo extends StatefulWidget {
   final String name;
   final String address;
   final String phone;
-  const EditInfo(this.name, this.address, this.phone);
+  final List chair;
+  const EditInfo(this.name, this.address, this.phone,this.chair);
   @override
-  _EditInfoState createState() => _EditInfoState(name,address,phone);
+  _EditInfoState createState() => _EditInfoState(name,address,phone,chair);
 }
 
 class _EditInfoState extends State<EditInfo> {
@@ -19,11 +24,20 @@ class _EditInfoState extends State<EditInfo> {
   final String name;
   final String address;
   final String phone;
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _addressController = TextEditingController();
+  final List chair;
+   TextEditingController _nameController = TextEditingController();
+   TextEditingController _phoneController = TextEditingController();
+   TextEditingController _addressController = TextEditingController();
 
-  _EditInfoState(this.name, this.address, this.phone);
+  _EditInfoState(this.name, this.address, this.phone,this.chair);
+  void initState() {
+    print(chair);
+   _nameController.text = name;
+   _phoneController.text = phone;
+   _addressController.text = address;
+  }
+  String to = 'Nam';
+  List listGo = ['Nam', 'Nữ'];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,8 +59,8 @@ class _EditInfoState extends State<EditInfo> {
                     controller: _nameController,
                     style: TextStyle(fontSize: 18, color: Colors.black),
                     decoration: InputDecoration(
-                        hintText: '${name}',
                         helperText: 'Họ Tên',
+                        enabled: name == ''?false:true,
                         errorText: snapshot.hasError ? snapshot.error : null,
                         prefixIcon: Container(
                             width: 50, child: Icon(Icons.person_rounded)),
@@ -59,6 +73,34 @@ class _EditInfoState extends State<EditInfo> {
                 ),
               ),
               Padding(
+                    padding: const EdgeInsets.all(.0),
+                    child: Container(
+                      padding: EdgeInsets.only(left: 16, right: 16),
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey, width: 1),
+                          borderRadius: BorderRadius.circular(9)),
+                      child: DropdownButton(
+                          hint: Text('Giới Tính'),
+                          icon: Icon(Icons.arrow_drop_down),
+                          iconSize: 36,
+                          isExpanded: true,
+                          underline: SizedBox(),
+                          style: TextStyle(fontSize: 22, color: Colors.black),
+                          value: to,
+                          onChanged: (newValue) {
+                            setState(() {
+                              to = newValue;
+                            });
+                          },
+                          items: listGo.map((newValue) {
+                            return DropdownMenuItem(
+                              value: newValue,
+                              child: Text(newValue),
+                            );
+                          }).toList()),
+                    ),
+                  ),
+              Padding(
                 padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
                 child: StreamBuilder(
                   stream: authBloc.addressStream,
@@ -66,7 +108,6 @@ class _EditInfoState extends State<EditInfo> {
                     controller: _addressController,
                     style: TextStyle(fontSize: 18, color: Colors.black),
                     decoration: InputDecoration(
-                        hintText: '${address}',
                         helperText: 'Địa Chỉ',
                         errorText: snapshot.hasError ? snapshot.error : null,
                         prefixIcon: Container(
@@ -88,7 +129,6 @@ class _EditInfoState extends State<EditInfo> {
                     keyboardType: TextInputType.number,
                     style: TextStyle(fontSize: 18, color: Colors.black),
                     decoration: InputDecoration(
-                        hintText: '${phone}',
                         helperText: 'Số Điện Thoại',
                         errorText: snapshot.hasError ? snapshot.error : null,
                         prefixIcon: Container(
@@ -146,6 +186,16 @@ class _EditInfoState extends State<EditInfo> {
   }
 
   Future<void> _onLoginClick() async {
+    String hot = handlehot();
+          var url = Uri.parse('$hot/user/m/pay');
+      var response = await http.post(url, body: {
+        'Email': "shinminah357159@gmail.com",
+        'NgayDat': "djsbf",
+        "MaCX":"P001",
+        "SLGhe":jsonEncode(chair),
+        "SDT":"dsf",
+        "DiaChi":"ffbfg"
+      });
     print(_nameController.text);
     _showMyDialog();
 

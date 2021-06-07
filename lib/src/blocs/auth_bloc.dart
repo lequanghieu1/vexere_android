@@ -47,26 +47,37 @@ class AuthBloc {
     }
     _nameController.sink.add("");
 
-    if (phone == null || phone.length == 0) {
-      _phoneController.sink.addError("Nhập số điện thoại");
+    if (email == null || email.length == 0) {
+      _phoneController.sink.addError("Nhập Email");
+      return false;
+    }
+    if(RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(email) == false){
+      _phoneController.sink.addError("email sai định dạng");
       return false;
     }
     _phoneController.sink.add("");
 
-    if (email == null || email.length == 0) {
-      _emailController.sink.addError("Nhập email");
+    if (pass.length <1) {
+      _emailController.sink.addError("Nhập mật khẩu ");
+      return false;
+    }
+      if (pass.length < 8) {
+      _emailController.sink.addError("Mật khẩu phải trên 7 ký tự");
       return false;
     }
     _emailController.sink.add("");
+      if (phone.length < 1) {
+      _passController.sink.addError(" Nhập lại mật khẩu ");
+      return false;
+    }
+    if(phone != pass){
+      _passController.sink.addError("nhập lại mật khẩu không chính xác");
+      return false;
+    }
+    
 
-    if (pass.length < 1) {
-      _passController.sink.addError(" Nhập mật khẩu ");
-      return false;
-    }
-    if (pass.length < 6) {
-      _passController.sink.addError("Mật khẩu phải trên 5 ký tự");
-      return false;
-    }
+  
+  
     _passController.sink.add("");
 
     return true;
